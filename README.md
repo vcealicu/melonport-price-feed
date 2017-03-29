@@ -1,3 +1,5 @@
+## Cryptocompare Melonport Module: Pricefeed
+
 This repository contains the source code of the CryptoCompare price feed smart contract designed to work as a module for the Melonport's Melon protocol.
 
 The contract is now live on Kovan: https://kovan.etherscan.io/address/0x5cc7f6b7d0f4b05acf3b186d540a3ec24cada5ae
