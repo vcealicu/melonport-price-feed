@@ -11,7 +11,6 @@ import "github.com/Arachnid/solidity-stringutils/strings.sol";
 /// @title Price Feed Contract
 /// @author Melonport AG <team@melonport.com>
 /// @notice Routes external data to smart contracts
-
 contract JSON_Decoder {
   using strings for *;
 
@@ -60,26 +59,26 @@ contract JSON_Decoder {
       return parts[x];
     }
   }
-  
+
   // strips any double quotes, escaped quotes must be handled manually
   function JSONpath_string(string _json, string _path) constant returns(string _r) {
     _r = JSONpath_raw(_json, _path);
-    
+
     var s = _r.toSlice();
     var delim = '"'.toSlice();
-    
+
     if (s.contains(delim)) {
       var parts = new strings.slice[](s.count(delim));
       var resultSlice = ''.toSlice();
       for (uint i = 0; i < parts.length; i++) {
           parts[i] = s.split(delim);
       }
-      
+
       return ''.toSlice().join(parts);
     }
-        
+
   }
-  
+
   function JSONpath_int(string _json, string _path, uint _decimals) constant returns(uint) {
       return parseInt(JSONpath_string(_json, _path), _decimals);
   }
@@ -205,14 +204,14 @@ contract b64 {
         byte v2;
         byte v3;
         byte v4;
-        
+
         //bytes memory s = bytes(_s);
         uint length = s.length;
         bytes memory result = new bytes(length);
-        
+
         uint index;
-        
-        bytes memory BASE64_DECODE_CHAR = hex"000000000000000000000000000000000000000000000000000000000000000000000000000000000000003e003e003f3435363738393a3b3c3d00000000000000000102030405060708090a0b0c0d0e0f10111213141516171819000000003f001a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30313233"; 
+
+        bytes memory BASE64_DECODE_CHAR = hex"000000000000000000000000000000000000000000000000000000000000000000000000000000000000003e003e003f3435363738393a3b3c3d00000000000000000102030405060708090a0b0c0d0e0f10111213141516171819000000003f001a1b1c1d1e1f202122232425262728292a2b2c2d2e2f30313233";
         //MAP[chr]
         if (sha3(s[length - 2]) == sha3('=')) {
             length -= 2;
@@ -227,32 +226,32 @@ contract b64 {
             v2 = BASE64_DECODE_CHAR[uint(s[i++])];
             v3 = BASE64_DECODE_CHAR[uint(s[i++])];
             v4 = BASE64_DECODE_CHAR[uint(s[i++])];
-            
-            
+
+
             result[index++] = (v1 << 2 | v2 >> 4) & 255;
             result[index++] = (v2 << 4 | v3 >> 2) & 255;
             result[index++] = (v3 << 6 | v4) & 255;
         }
-        
+
        if (length - count == 2) {
             v1 = BASE64_DECODE_CHAR[uint(s[i++])];
             v2 = BASE64_DECODE_CHAR[uint(s[i++])];
             result[index++] = (v1 << 2 | v2 >> 4) & 255;
-        } 
+        }
         else if (length - count == 3) {
             v1 = BASE64_DECODE_CHAR[uint(s[i++])];
             v2 = BASE64_DECODE_CHAR[uint(s[i++])];
             v3 = BASE64_DECODE_CHAR[uint(s[i++])];
-            
+
             result[index++] = (v1 << 2 | v2 >> 4) & 255;
             result[index++] = (v2 << 4 | v3 >> 2) & 255;
         }
-        
+
         // set to correct length
         assembly {
             mstore(result, index)
         }
-        
+
         //debug(result);
         //res = result;
         return result;
@@ -284,7 +283,7 @@ contract ECVerify {
             ret := call(3000, 1, 0, size, 128, size, 32)
             addr := mload(size)
         }
-  
+
         return (ret, addr);
     }
 
@@ -337,34 +336,34 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     struct Data {
         uint timestamp; // Timestamp of last price update of this asset
-        uint price; // Price of asset relative to Ether with decimals of this asset
+        uint price; // Price of asset quoted against `quoteAsset` times ten to the power of {decimals of this asset}
     }
-    
+
     struct AssetInfo {
         address assetAddress;
         string assetTicker;
     }
-    
+
     // FIELDS
 
     // Constant fields
     // Token addresses on Kovan
-    address public constant ETHER_TOKEN = 0xc5f550c78db2ee33e5867c432e175cac89073772;
-    address public constant BITCOIN_TOKEN = 0x23bb1f93c168a290f0626ec9b9fd8ba8c8591752;
-    address public constant REP_TOKEN = 0x02a2656ad55e07c3bc7b5d388e80d5a675b28a20;
-    address public constant EURO_TOKEN = 0x605832d1f474cafc26951287ec47d5c09334f1ce;
-    address public constant MELON_TOKEN = 0xfcf98c25129ba729e1822e56ffbd3e758b81ce7c;
+    address public constant ETHER_TOKEN = 0x7506c7BfED179254265d443856eF9bda19221cD7;
+    address public constant MELON_TOKEN = 0x4dffea52b0b4b48c71385ae25de41ce6ad0dd5a7;
+    address public constant BITCOIN_TOKEN = 0x9E4C56a633DD64a2662bdfA69dE4FDE33Ce01bdd;
+    address public constant EURO_TOKEN = 0xF61b8003637E5D5dbB9ca8d799AB54E5082CbdBc;
+    address public constant REP_TOKEN = 0xC151b622fDeD233111155Ec273BFAf2882f13703;
 
     // Fields that are only changed in constructor
-    /// Note: By definition the price of the base asset against itself (base asset) is always equals one
-    address baseAsset; // Is the base asset of a portfolio against which all other assets are priced against
+    /// Note: By definition the price of the quote asset against itself (quote asset) is always equals one
+    address quoteAsset; // Is the quote asset of a portfolio against which all other assets are priced against
     // Fields that can be changed by functions
     uint frequency = 300; // Frequency of updates in seconds
-    uint validity = 600; // After time has passed data is considered invalid.
+    uint validity = 600; // Time in seconds data is considered valid
     uint gasLimit = 350000;
     uint public numAssets = 0;
     bytes ds_pubkey;
-       
+
     mapping(uint => AssetInfo) public assetsIndex;
     mapping (address => Data) data; // Address of fungible => price of fungible
 
@@ -406,7 +405,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     // CONSTANT METHODS
 
-    function getBaseAsset() constant returns (address) { return baseAsset; }
+    function getQuoteAsset() constant returns (address) { return quoteAsset; }
     function getFrequency() constant returns (uint) { return frequency; }
     function getValidity() constant returns (uint) { return validity; }
 
@@ -421,12 +420,12 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     {
         return data[ofAsset].price;
     }
-    
-    function getPublicKey() 
-        constant 
-        returns (bytes) 
+
+    function getPublicKey()
+        constant
+        returns (bytes)
     {
-        return ds_pubkey;        
+        return ds_pubkey;
     }
 
     // Pre: Checks for initialisation and inactivity
@@ -444,12 +443,14 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     function PriceFeed() payable {
         oraclize_setProof(240);
-        baseAsset = ETHER_TOKEN; // All input (quote-) prices against this base asset
-        addAsset("BTC",BITCOIN_TOKEN);
-        //These assets must be added manually because block gas limit is too low
-	//addAsset("REP",REP_TOKEN);
-        //addAsset("EUR",EURO_TOKEN);
-        //addAsset("MLN",MELON_TOKEN);
+        quoteAsset = ETHER_TOKEN; // Is the quote asset of a portfolio against which all other assets are priced against
+        /* Note:
+         *  Prices shold be quoted in quoteAsset
+         *  1) ETH/MLN
+         *  2) BTC/ETH -> ETH/BTC
+         *  3) EUR/ETH -> ETH/EUR
+         *  4) ETH/REP
+         */
         setQuery("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,EUR,MLN,REP&sign=true");
         ds_pubkey = hex"a0f4f688350018ad1b9785991c0bde5f704b005dc79972b114dbed4a615a983710bfc647ebe5a320daa28771dce6a2d104f5efa2e4a85ba3760b76d46f8571ca";
         enableContinuousDelivery();
@@ -459,7 +460,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     function () payable {}
 
     // NON-CONSTANT METHODS
-    
+
      function nativeProof_verify(string result, bytes proof, bytes pubkey) private returns (bool){
         uint sig_len = uint(proof[1]);
         bytes memory sig = new bytes(sig_len);
@@ -476,7 +477,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
         (sigok, signer) = ecrecovery(sha256(headers), sig);
         return (signer == address(sha3(pubkey)));
     }
-    
+
     function copyBytes(bytes from, uint fromOffset, uint length, bytes to, uint toOffset) internal returns (bytes) {
         uint minLength = length + toOffset;
 
@@ -500,7 +501,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
         return to;
     }
-    
+
     function __callback(bytes32 oraclizeId, string result, bytes proof) only_oraclize {
         // Update prices only if native proof is verified
         if (nativeProof_verify(result, proof, ds_pubkey)) {
@@ -509,12 +510,12 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
                 setPriceOf(result, thisAsset.assetTicker, thisAsset.assetAddress);
             }
         }
-        
+
         if (continuousDelivery) {
            updatePriceOraclize();
         }
     }
-    
+
     function setPriceOf(string result, string ticker, address assetAddress) internal {
         Asset currentAsset = Asset(assetAddress);
         uint decimals = currentAsset.getDecimals();
@@ -522,12 +523,12 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
         data[assetAddress] = Data(now, price);
         PriceUpdated(assetAddress, now, price);
     }
-    
+
 
     function setQuery(string query) only_owner {
         oraclizeQuery = query;
     }
-    
+
     function updateKey(bytes _pubkey) only_owner {
         ds_pubkey = _pubkey;
     }
@@ -539,7 +540,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     function disableContinuousDelivery() only_owner {
         delete continuousDelivery;
     }
-    
+
     function setGasLimit(uint _newGasLimit) only_owner {
         gasLimit = _newGasLimit;
     }
