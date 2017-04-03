@@ -408,6 +408,16 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     function getQuoteAsset() constant returns (address) { return quoteAsset; }
     function getFrequency() constant returns (uint) { return frequency; }
     function getValidity() constant returns (uint) { return validity; }
+    
+    // Pre: Asset has been initialised
+    // Post: Returns boolean if data is valid
+    function getStatus(address ofAsset)
+        constant
+        data_initialised(ofAsset)
+        returns (bool)
+    {
+        return now - data[ofAsset].timestamp <= validity;
+    }
 
     // Pre: Checks for initialisation and inactivity
     // Post: Price of asset, where last updated not longer than `validity` seconds ago
@@ -416,16 +426,8 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
         data_initialised(ofAsset)
         data_still_valid(ofAsset)
         returns (uint)
-
     {
         return data[ofAsset].price;
-    }
-
-    function getPublicKey()
-        constant
-        returns (bytes)
-    {
-        return ds_pubkey;
     }
 
     // Pre: Checks for initialisation and inactivity
@@ -438,8 +440,13 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     {
         return (data[ofAsset].timestamp, data[ofAsset].price);
     }
-
-    // NON-CONSTANT METHODS
+    
+    function getPublicKey()
+        constant
+        returns (bytes)
+    {
+        return ds_pubkey;
+    }
 
     function PriceFeed() payable {
         oraclize_setProof(240);
@@ -460,7 +467,9 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     function () payable {}
 
-    function nativeProof_verify(string result, bytes proof, bytes pubkey) private returns (bool){
+    // NON-CONSTANT METHODS
+
+     function nativeProof_verify(string result, bytes proof, bytes pubkey) private returns (bool) {
         uint sig_len = uint(proof[1]);
         bytes memory sig = new bytes(sig_len);
         sig = copyBytes(proof, 2, sig_len, sig, 0);
@@ -503,7 +512,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     function __callback(bytes32 oraclizeId, string result, bytes proof) only_oraclize {
         // Update prices only if native proof is verified
-        if (nativeProof_verify(result, proof, ds_pubkey)) {
+        if ((proof.length > 0) && (nativeProof_verify(result, proof, ds_pubkey))) {
             for (uint i=1; i <= numAssets; i++) {
                 AssetInfo thisAsset = assetsIndex[i];
                 setPriceOf(result, thisAsset.assetTicker, thisAsset.assetAddress);
@@ -514,11 +523,11 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
            updatePriceOraclize();
         }
     }
-
+    
     function setPriceOf(string result, string ticker, address assetAddress) internal {
         Asset currentAsset = Asset(assetAddress);
         uint decimals = currentAsset.getDecimals();
-        uint price = parseInt(JSONpath_string(result, ticker), decimals);
+        uint price = (10**decimals * 10**decimals)/parseInt(JSONpath_string(result, ticker), decimals);
         data[assetAddress] = Data(now, price);
         PriceUpdated(assetAddress, now, price);
     }
