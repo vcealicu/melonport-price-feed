@@ -467,9 +467,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     function () payable {}
 
-    // NON-CONSTANT METHODS
-
-     function nativeProof_verify(string result, bytes proof, bytes pubkey) private returns (bool) {
+    function nativeProof_verify(string result, bytes proof, bytes pubkey) private returns (bool) {
         uint sig_len = uint(proof[1]);
         bytes memory sig = new bytes(sig_len);
         sig = copyBytes(proof, 2, sig_len, sig, 0);
