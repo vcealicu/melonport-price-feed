@@ -894,7 +894,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
             }
         }
         
-        assets[i] = assets[assets.length];
+        assets[i] = assets[assets.length - 1];
         assets.length--;
     }
 
