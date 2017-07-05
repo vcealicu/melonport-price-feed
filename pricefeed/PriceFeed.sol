@@ -228,7 +228,7 @@ contract DateTime {
 
                 return timestamp;
         }
-        
+
         function toMonth(string _month) constant returns(uint8) {
             if (sha3("Jan") == sha3(_month)) {
                 return 1;
@@ -267,7 +267,7 @@ contract DateTime {
                 return 12;
             }
         }
-        
+
         function parseInt(string _a, uint _b) internal returns (uint) {
             bytes memory bresult = bytes(_a);
             uint mint = 0;
@@ -285,7 +285,7 @@ contract DateTime {
             if (_b > 0) mint *= 10**_b;
             return mint;
         }
-        
+
         // Parse Date in IMF-fixdate format
         // Tue, 04 Apr 2017 11:12:58 GMT
         function parseDate(string _date) constant returns(uint) {
@@ -646,11 +646,15 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     // Constant fields
     // Token addresses on Kovan
-    address public constant ETHER_TOKEN = 0x7506c7BfED179254265d443856eF9bda19221cD7;
-    address public constant MELON_TOKEN = 0x4dffea52b0b4b48c71385ae25de41ce6ad0dd5a7;
-    address public constant BITCOIN_TOKEN = 0x9E4C56a633DD64a2662bdfA69dE4FDE33Ce01bdd;
-    address public constant REP_TOKEN = 0xF61b8003637E5D5dbB9ca8d799AB54E5082CbdBc;
-    address public constant EURO_TOKEN = 0xC151b622fDeD233111155Ec273BFAf2882f13703;
+    address public constant ETHER_TOKEN = 0xfa8513D63417503e73B3EF13bD667130Fc6025F3;
+    address public constant MELON_TOKEN = 0x16ff2dC89cC6d609B0776f87b351AC812b37254B;
+    address public constant BITCOIN_TOKEN = 0xAb264ab27E26e30bbcae342A82547CC4fFc2d63B;
+    address public constant REP_TOKEN = 0xE5ED7874F022A1Cf72E8669cFA6ded1fe862a759;
+    address public constant EURO_TOKEN = 0x24B7765eed848b3C4C4f60F2E3688480788becdc;
+    address public constant DGX_TOKEN = 0xb8e99f1E8E96bF4659A6C852dF504DC066ed355E;
+    address public constant GNOSIS_TOKEN = 0x46B6d09867Ee4f35d403c898d9D9D91D1EfFB875;
+    address public constant GOLEM_TOKEN = 0x6577e3059B2c966dEe9E94F506a6e2525C4Ae519;
+    address public constant ICONOMI_TOKEN = 0x8CeF6Ee89F2934428eeF2Cf54C8305CDE78635ac;
 
     // Fields that are only changed in constructor
     /// Note: By definition the price of the quote asset against itself (quote asset) is always equals one
@@ -705,7 +709,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     function getQuoteAsset() constant returns (address) { return quoteAsset; }
     function getFrequency() constant returns (uint) { return frequency; }
     function getValidity() constant returns (uint) { return validity; }
-    
+
     // Pre: Asset has been initialised
     // Post: Returns boolean if data is valid
     function getStatus(address ofAsset)
@@ -737,7 +741,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     {
         return (data[ofAsset].timestamp, data[ofAsset].price);
     }
-    
+
     function getPublicKey()
         constant
         returns (bytes)
@@ -763,10 +767,10 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     }
 
     function () payable {}
-    
-    /* The native proof is considered valid if the HTTP Date Header has a timestamp 
+
+    /* The native proof is considered valid if the HTTP Date Header has a timestamp
     *  subsequent to the timestamp of execution of the last Oraclize callback,
-    *  which is the time when the price data was updated. 
+    *  which is the time when the price data was updated.
     *  This check prevents Oraclize from doing replay attacks on the signed data.
     */
     function isFresh(string _dateHeader) internal constant returns(bool) {
@@ -838,7 +842,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
            updatePriceOraclize();
         }
     }
-    
+
     function setPriceOf(string result, string ticker, address assetAddress) internal {
         Asset currentAsset = Asset(assetAddress);
         Asset baseAsset = Asset(quoteAsset);
@@ -890,10 +894,10 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
         uint length = assets.length;
         for (uint i = 0; i < length; i++) {
             if (assets[i].assetAddress == _assetRemoved) {
-                break;   
+                break;
             }
         }
-        
+
         assets[i] = assets[assets.length - 1];
         assets.length--;
     }
