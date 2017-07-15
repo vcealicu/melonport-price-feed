@@ -646,15 +646,24 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     // Constant fields
     // Token addresses on Kovan
-    address public constant ETHER_TOKEN = 0xfa8513D63417503e73B3EF13bD667130Fc6025F3;
-    address public constant MELON_TOKEN = 0x16ff2dC89cC6d609B0776f87b351AC812b37254B;
+    address public constant ARAGON_TOKEN = 0xD3436495fc2401C3be2517d5Ed673Bf8bA93414C;
+    /*address public constant AVENTUS_TOKEN = 0xEC46a98317BF62601eC26CA735140c197F2E4B12;*/
+    address public constant BANCOR_TOKEN = 0xE89f924035E48A505D38FeA21cD0CF2e7d8BA0be;
+    address public constant BA_TOKEN = 0x985FC413eA7D6b31dc193a5e7b8d4014d90A06De;
     address public constant BITCOIN_TOKEN = 0xAb264ab27E26e30bbcae342A82547CC4fFc2d63B;
-    address public constant REP_TOKEN = 0xE5ED7874F022A1Cf72E8669cFA6ded1fe862a759;
+    address public constant DGD_TOKEN = 0xe5BdDAec9e4c3a7F1923d5d3477Ea0484F03FDa7;
+    /*address public constant DGX_TOKEN = 0xb8e99f1E8E96bF4659A6C852dF504DC066ed355E;*/
+    address public constant DOGECOIN_TOKEN = 0xcF06C6E760a9dc878931b161D7338B21e85DCa55;
+    address public constant ETHER_CLASSIC_TOKEN = 0xCa41BdFe56AcDf821C87aFAf91cC43fcABd86D8E;
+    address public constant ETHER_TOKEN = 0xfa8513D63417503e73B3EF13bD667130Fc6025F3;
     address public constant EURO_TOKEN = 0x24B7765eed848b3C4C4f60F2E3688480788becdc;
-    address public constant DGX_TOKEN = 0xb8e99f1E8E96bF4659A6C852dF504DC066ed355E;
     address public constant GNOSIS_TOKEN = 0x46B6d09867Ee4f35d403c898d9D9D91D1EfFB875;
     address public constant GOLEM_TOKEN = 0x6577e3059B2c966dEe9E94F506a6e2525C4Ae519;
     address public constant ICONOMI_TOKEN = 0x8CeF6Ee89F2934428eeF2Cf54C8305CDE78635ac;
+    address public constant LITECOIN_TOKEN = 0x755e01669Ab1E0Da02b1325CD27aBD27B3e314B3;
+    address public constant MELON_TOKEN = 0x16ff2dC89cC6d609B0776f87b351AC812b37254B;
+    address public constant REP_TOKEN = 0xE5ED7874F022A1Cf72E8669cFA6ded1fe862a759;
+    address public constant RIPPLE_TOKEN = 0x89117759Dd6B7974456221E158A8Ead124d428CE;
 
     // Fields that are only changed in constructor
     /// Note: By definition the price of the quote asset against itself (quote asset) is always equals one
@@ -760,7 +769,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
          *  3) EUR/ETH -> ETH/EUR
          *  4) REP/ETH -> ETH/REP
          */
-        //setQuery("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=MLN,BTC,EUR,REP&sign=true");
+        setQuery("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=ANT,BNT,BAT,BTC,DGD,DOGE,ETC,ETH,EUR,GNO,GNT,ICN,LTC,MLN,REP,XRP&sign=true");
         ds_pubkey = hex"a0f4f688350018ad1b9785991c0bde5f704b005dc79972b114dbed4a615a983710bfc647ebe5a320daa28771dce6a2d104f5efa2e4a85ba3760b76d46f8571ca";
         //enableContinuousDelivery();
         //oraclize_query('URL', oraclizeQuery, 500000);
