@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.11;
 
 import "github.com/melonproject/protocol/contracts/datafeeds/PriceFeedProtocol.sol";
 import "github.com/melonproject/protocol/contracts/assets/Asset.sol";
@@ -626,7 +626,7 @@ contract ECVerify {
 
 }
 
-contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProtocol, SafeMath, Owned {
+contract CryptoCompare is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProtocol, SafeMath, Owned {
     using strings for *;
     DateTime time = DateTime(0xe586cc86e5dfcf6e0578ea0dfcc0fcbe98ca988b);
 
@@ -639,31 +639,35 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
 
     struct AssetInfo {
         address assetAddress;
-        string assetTicker;
+        string assetSymbol;
     }
 
     // FIELDS
 
     // Constant fields
     // Token addresses on Kovan
-    address public constant ARAGON_TOKEN = 0xD3436495fc2401C3be2517d5Ed673Bf8bA93414C;
-    /*address public constant AVENTUS_TOKEN = 0xEC46a98317BF62601eC26CA735140c197F2E4B12;*/
-    address public constant BANCOR_TOKEN = 0xE89f924035E48A505D38FeA21cD0CF2e7d8BA0be;
-    address public constant BA_TOKEN = 0x985FC413eA7D6b31dc193a5e7b8d4014d90A06De;
-    address public constant BITCOIN_TOKEN = 0xAb264ab27E26e30bbcae342A82547CC4fFc2d63B;
-    address public constant DGD_TOKEN = 0xe5BdDAec9e4c3a7F1923d5d3477Ea0484F03FDa7;
-    /*address public constant DGX_TOKEN = 0xb8e99f1E8E96bF4659A6C852dF504DC066ed355E;*/
-    address public constant DOGECOIN_TOKEN = 0xcF06C6E760a9dc878931b161D7338B21e85DCa55;
-    address public constant ETHER_CLASSIC_TOKEN = 0xCa41BdFe56AcDf821C87aFAf91cC43fcABd86D8E;
-    address public constant ETHER_TOKEN = 0xfa8513D63417503e73B3EF13bD667130Fc6025F3;
-    address public constant EURO_TOKEN = 0x24B7765eed848b3C4C4f60F2E3688480788becdc;
-    address public constant GNOSIS_TOKEN = 0x46B6d09867Ee4f35d403c898d9D9D91D1EfFB875;
-    address public constant GOLEM_TOKEN = 0x6577e3059B2c966dEe9E94F506a6e2525C4Ae519;
-    address public constant ICONOMI_TOKEN = 0x8CeF6Ee89F2934428eeF2Cf54C8305CDE78635ac;
-    address public constant LITECOIN_TOKEN = 0x755e01669Ab1E0Da02b1325CD27aBD27B3e314B3;
-    address public constant MELON_TOKEN = 0x16ff2dC89cC6d609B0776f87b351AC812b37254B;
-    address public constant REP_TOKEN = 0xE5ED7874F022A1Cf72E8669cFA6ded1fe862a759;
-    address public constant RIPPLE_TOKEN = 0x89117759Dd6B7974456221E158A8Ead124d428CE;
+    address public constant ARAGON_TOKEN = 0xD99aED09A65ee8377A2fFad8ED5407785c530869;
+    /*address public constant AVENTUS_TOKEN = 0x20A0E0dECE9FB6C690CdB439db2B385d271BdA3f;*/
+    address public constant BANCOR_TOKEN = 0x764ae227ad6a6e143546772169265d76aA9337c6;
+    address public constant BA_TOKEN = 0xFEE1D0Dc0b5b6F2F20D8e9f7E95e9E367E4a61A7;
+    address public constant BITCOIN_TOKEN = 0xF53E3B6c12f8c66324A64F31277260C06D869732;
+    address public constant DGD_TOKEN = 0x3b7c7C457D3aAe04a4631E4888AeEEDd08B24e41;
+    /*address public constant DGX_TOKEN = 0x804b7F797eEe4D51Fef29b3Ef7E525A3848A0c0F;*/
+    address public constant DOGECOIN_TOKEN = 0xC37cdFb70BD68f6FCF2aB0a97E1D6a12eaA9215f;
+    address public constant ETHER_CLASSIC_TOKEN = 0x334559E91238f466C95Bb8241555f6AD27f5978B;
+    address public constant ETHER_TOKEN = 0x1a825E9bF3BdC8ef8B975F97c78b5208a947d0EC;
+    address public constant EURO_TOKEN = 0xCAAC95AB4D30EE8D6162e55EB3430134FEc5aF50;
+    address public constant GNOSIS_TOKEN = 0xC73D78870bA5a3eAddC2BE371Af09B2c429CB2CA;
+    address public constant GOLEM_TOKEN = 0x08C24283F0b6C07ff9793a1B8534A49B32C07e73;
+    address public constant ICONOMI_TOKEN = 0xc87BAD39aaDB70257E2417Bd8f4983361599394D;
+    address public constant LITECOIN_TOKEN = 0xF051264ab9046fd73cBd00df5E732d2cA78ee704;
+    address public constant MELON_TOKEN = 0x2a20ff70596e431ab26C2365acab1b988DA8eCCF;
+    /*address public constant MAKERDAO_TOKEN = 0xe1b25BCaE898ab228A13EAC49EBBA8D3df9add70;*/
+    address public constant REP_TOKEN = 0x64aF87A36a407732320c4dc1852dEBC60cd81c5E;
+    address public constant RIPPLE_TOKEN = 0x3b43249De8Eee169Eea7226a48699FcBA8DF3686;
+    address public constant SINGULARDTV_TOKEN = 0x4C4e2b285e446fb1974dcC3a665CAba7C189A96f;
+    address public constant STATUS_NETWORK_TOKEN = 0x64C4406C58C512f326d83065a72F12884105520b;
+    /*address public constant 0x_TOKEN = 0xbb0449e9b66e2E1438522645caE6Cf9CD8595793;*/
 
     // Fields that are only changed in constructor
     /// Note: By definition the price of the quote asset against itself (quote asset) is always equals one
@@ -684,7 +688,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     // ORACLIZE DATA-STRUCTURES
 
     bool continuousDelivery;
-    string oraclizeQuery;
+    string public oraclizeQuery;
 
     // MODIFIERS
 
@@ -709,7 +713,12 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
     }
 
     modifier only_oraclize {
-        if (msg.sender != oraclize_cbAddress()) throw;
+        assert(msg.sender == oraclize_cbAddress());
+        _;
+    }
+
+    modifier only_owner {
+        assert(msg.sender == owner);
         _;
     }
 
@@ -758,21 +767,40 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
         return ds_pubkey;
     }
 
-    function PriceFeed() payable {
+    function CryptoCompare() payable {
         oraclize_setProof(240);
         quoteAsset = ETHER_TOKEN; // Is the quote asset of a portfolio against which all other assets are priced against
         /* Note:
          *  Sample response for below query {"MLN":1.36,"BTC":0.04695,"EUR":47.48,"REP":4.22}
-         *  Prices shold be quoted in quoteAsset
-         *  1) MLN/ETH -> ETH/MLN
-         *  2) BTC/ETH -> ETH/BTC
-         *  3) EUR/ETH -> ETH/EUR
-         *  4) REP/ETH -> ETH/REP
+         *  Prices shold be quoted in quoteAsset, i.e. they need to be inverted e.g. MLN/ETH -> ETH/MLN
          */
-        setQuery("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=ANT,BNT,BAT,BTC,DGD,DOGE,ETC,ETH,EUR,GNO,GNT,ICN,LTC,MLN,REP,XRP&sign=true");
+        setQuery("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=ANT,BNT,BAT,BTC,DGD,DOGE,ETC,ETH,EUR,GNO,GNT,ICN,LTC,MLN,REP,XRP,SNGLS,SNT&sign=true");
         ds_pubkey = hex"a0f4f688350018ad1b9785991c0bde5f704b005dc79972b114dbed4a615a983710bfc647ebe5a320daa28771dce6a2d104f5efa2e4a85ba3760b76d46f8571ca";
-        //enableContinuousDelivery();
-        //oraclize_query('URL', oraclizeQuery, 500000);
+
+        addAsset('ANT', ARAGON_TOKEN);
+        //addAsset('AVT', AVENTUS_TOKEN);
+        addAsset('BNT', BANCOR_TOKEN);
+        addAsset('BAT', BA_TOKEN);
+        addAsset('BTC', BITCOIN_TOKEN);
+        addAsset('DGD', DGD_TOKEN);
+        //addAsset('DGX', DGX_TOKEN);
+        addAsset('DOGE', DOGECOIN_TOKEN);
+        addAsset('ETC', ETHER_CLASSIC_TOKEN);
+        addAsset('ETH', ETHER_TOKEN);
+        addAsset('EUR', EURO_TOKEN);
+        addAsset('GNO', GNOSIS_TOKEN);
+        addAsset('GNT', GOLEM_TOKEN);
+        addAsset('ICN', ICONOMI_TOKEN);
+        addAsset('LTC', LITECOIN_TOKEN);
+        addAsset('MLN', MELON_TOKEN);
+        //addAsset('MKR', MAKERDAO_TOKEN);
+        addAsset('REP', REP_TOKEN);
+        addAsset('XRP', RIPPLE_TOKEN);
+        addAsset('SNGLS', SINGULARDTV_TOKEN);
+        addAsset('SNT', STATUS_NETWORK_TOKEN);
+        //addAsset('ZRX', 0x_TOKEN);
+
+        enableContinuousDelivery();
     }
 
     function () payable {}
@@ -843,7 +871,7 @@ contract PriceFeed is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProto
         if ((proof.length > 0) && (nativeProof_verify(result, proof, ds_pubkey))) {
             for (uint i=0; i < assets.length; i++) {
                 AssetInfo thisAsset = assets[i];
-                setPriceOf(result, thisAsset.assetTicker, thisAsset.assetAddress);
+                setPriceOf(result, thisAsset.assetSymbol, thisAsset.assetAddress);
             }
         }
 
