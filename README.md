@@ -2,7 +2,7 @@
 
 This repository contains the source code of the CryptoCompare price feed smart contract designed to work as a module for the Melonport's Melon protocol.
 
-The contract is now live on Kovan: https://kovan.etherscan.io/address/0x442Fd95C32162F914364C5fEFf27A0Dc05214706 
+The contract is now live on Kovan: https://kovan.etherscan.io/address/0x00dCe4ce37Af55A7CC77C96d72D1c5e3997Cd396
 
 It continuously fetches data from the CryptoCompare WebAPIs through Oraclize to provide on-chain references of the BTC, EUR, REP, MLN exchange rates against ETH. Compared to the existing Oraclize module, you get the benefit of having the data aggregated over all the trading exchanges. It would be a lot more expensive and harder to keep up to date if you had to aggregate the data on-chain. Also, it includes price information for more pairs and is easily extendable to fetch a lot more information if needed.
 
