@@ -3,7 +3,6 @@ pragma solidity ^0.4.11;
 import "github.com/melonproject/protocol/contracts/datafeeds/PriceFeedProtocol.sol";
 import "github.com/melonproject/protocol/contracts/assets/Asset.sol";
 import "github.com/melonproject/protocol/contracts/dependencies/ERC20.sol";
-import "github.com/melonproject/protocol/contracts/dependencies/SafeMath.sol";
 import "github.com/melonproject/protocol/contracts/dependencies/Owned.sol";
 import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
 import "github.com/Arachnid/solidity-stringutils/strings.sol";
@@ -626,7 +625,7 @@ contract ECVerify {
 
 }
 
-contract CryptoCompare is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProtocol, SafeMath, Owned {
+contract CryptoCompare is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedProtocol, Owned {
     using strings for *;
     DateTime time = DateTime(0xe586cc86e5dfcf6e0578ea0dfcc0fcbe98ca988b);
 
@@ -675,7 +674,7 @@ contract CryptoCompare is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedP
     // Fields that can be changed by functions
     uint frequency = 30; // Frequency of updates in seconds
     uint validity = 600; // Time in seconds data is considered valid
-    uint gasLimit = 500000;
+    uint gasLimit = 5000000;
     bytes ds_pubkey;
 
     AssetInfo[] public assets;
