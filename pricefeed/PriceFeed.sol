@@ -882,7 +882,7 @@ contract CryptoCompare is usingOraclize, ECVerify, b64, JSON_Decoder, PriceFeedP
     function setPriceOf(string result, string ticker, address assetAddress) internal {
         Asset currentAsset = Asset(assetAddress);
         Asset baseAsset = Asset(quoteAsset);
-        uint price = (10**currentAsset.getDecimals() * 10**baseAsset.getDecimals())/parseInt(JSONpath_string(result, ticker), currentAsset.getDecimals());
+        uint price = (10**uint(currentAsset.getDecimals()) * 10**uint(baseAsset.getDecimals()))/parseInt(JSONpath_string(result, ticker), uint(currentAsset.getDecimals()));
         data[assetAddress] = Data(now, price);
         PriceUpdated(assetAddress, now, price);
     }
